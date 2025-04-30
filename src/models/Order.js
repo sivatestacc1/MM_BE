@@ -21,12 +21,14 @@ const orderSchema = new mongoose.Schema({
   },
   logistics: {
     parcelServiceName: { type: String, required: true },
-    branch: { type: String, required: true }
+    branch: { type: String, required: true },
+    billNumber: {type: String, required: true}
   },
   items: [{
     name: { type: String, required: true },
     weight: { type: Number, required: true },
-    bagSize: { type: String, required: true }
+    bagSize: { type: String, required: true },
+    isPrinted: { type: Boolean, required: true }
   }]
 }, {
   timestamps: true
