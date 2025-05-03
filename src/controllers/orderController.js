@@ -9,6 +9,23 @@ export const getAllOrders = async (req, res) => {
   }
 };
 
+export const getOrdersByDate = async (req, res) => {
+  const dateToFind = new Date(req.body.date);
+  const year = dateToFind.getUTCFullYear();
+  const month = dateToFind.getMonth();
+  const date = dateToFind.getDate()+1;
+  const start = new Date(year, month, date);
+  const end = new Date(year, month, date+1);
+  try {
+    const orders = await Order.find({ 
+      orderDate: { $gte: start, $lt: end } 
+    }).sort({ orderNumber: -1 });
+    res.json(orders);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 export const getOrderByNumber = async (req, res) => {
   try {
     const order = await Order.findOne({ orderNumber: req.params.orderNumber });
