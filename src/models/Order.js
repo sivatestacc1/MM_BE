@@ -11,6 +11,11 @@ const orderSchema = new mongoose.Schema({
     required: true,
     default: Date.now
   },
+  invoiceDate: {
+    type: Date,
+    required: true,
+    default: Date.now
+  },
   customer: {
     name: { type: String, required: true },
     address: { type: String, required: true },

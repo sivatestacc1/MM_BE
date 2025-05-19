@@ -13,8 +13,9 @@ export const getOrdersByDate = async (req, res) => {
   const dateToFind = new Date(req.body.date);
   const year = dateToFind.getUTCFullYear();
   const month = dateToFind.getMonth();
-  const date = dateToFind.getDate()+1;
+  const date = dateToFind.getDate();
   const start = new Date(year, month, date);
+  start.setHours(0,0,0,0);
   const end = new Date(year, month, date+1);
   try {
     const orders = await Order.find({ 
@@ -40,7 +41,12 @@ export const getOrderByNumber = async (req, res) => {
 
 export const createOrder = async (req, res) => {
   try {
-    const order = new Order(req.body);
+    const { orderDate, ...rest } = req.body;
+    const order = new Order({
+      ...rest,
+      orderDate: new Date(orderDate),
+    });
+    // const order = new Order(req.body);
     const savedOrder = await order.save();
     res.status(201).json(savedOrder);
   } catch (error) {
