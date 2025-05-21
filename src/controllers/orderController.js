@@ -14,9 +14,9 @@ export const getOrdersByDate = async (req, res) => {
   const year = dateToFind.getUTCFullYear();
   const month = dateToFind.getMonth();
   const date = dateToFind.getDate();
-  const start = new Date(year, month, date);
+  const start = new Date(year, month, date-1);
   start.setHours(0,0,0,0);
-  const end = new Date(year, month, date+1);
+  const end = new Date(year, month, date);
   try {
     const orders = await Order.find({ 
       orderDate: { $gte: start, $lt: end } 
