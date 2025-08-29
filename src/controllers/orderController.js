@@ -42,13 +42,22 @@ export const getOrderByNumber = async (req, res) => {
 export const createOrder = async (req, res) => {
   try {
     const { orderDate, ...rest } = req.body;
-    const order = new Order({
-      ...rest,
-      orderDate: new Date(orderDate),
-    });
-    // const order = new Order(req.body);
-    const savedOrder = await order.save();
-    res.status(201).json(savedOrder);
+    if (rest.logistics && rest.logistics.billNumber) {
+      const order = await Order.findOne({ "logistics.billNumber": rest.logistics.billNumber});
+      if (order) {
+        return res.status(409).json({ message: 'Order with same bill number is already exists' });
+      } else {
+        const order = new Order({
+          ...rest,
+          orderDate: new Date(orderDate),
+        });
+        // const order = new Order(req.body);
+        const savedOrder = await order.save();
+        res.status(201).json(savedOrder);
+      }
+    } else {
+      return res.status(400).json({ message: 'Insufficient order information' });
+    }
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
